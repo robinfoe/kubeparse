@@ -1,0 +1,63 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: eadvice
+    namespace: accounting-services
+  spec:
+    replicas: 1
+    template:
+      spec:
+        volumes:
+          - name: memsql-master-data
+            persistentVolumeClaim:
+              claimName: memsql-master-data
+          - name: volume-eadvice-config
+            configMap:
+              name: eadvice-hk-config
+        containers:
+        - env:
+          - name: dummy
+            value: bypass
+          - name: fromconfig
+            valueFrom:
+              configMapKeyRef:
+                key: test
+                name: test-env-cfg 
+          envFrom:
+            - configMapRef:
+                name: eadvice-hk
+          image: memsql-master/memsql-master:latest
+          imagePullPolicy: Always
+          name: memsql-master
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: cash-account
+    namespace: owcsapi
+  spec:
+    replicas: 1
+    template:
+      spec:
+        containers:
+        - image: memsql-master/memsql-master:latest
+          imagePullPolicy: Always
+          name: memsql-master
+
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: debit-account
+    namespace: other-services
+  spec:
+    replicas: 1
+    template:
+      spec:
+        containers:
+        - image: memsql-master/memsql-master:latest
+          imagePullPolicy: Always
+          name: memsql-master
+

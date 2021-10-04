@@ -1,0 +1,23 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    test: hello
+    TEST_URL_01: http://cash-account.owcsapi.svc.cluster.local:8443/cast-account/api
+    TEST_URL_02: https://cash-account.box.com:8443/api
+    spring.datasource.hikari.url : ${DATABASE}.test.url
+    iamfeeddb.hikari.url: testurl
+  kind: ConfigMap
+  metadata:
+    name: eadvice-hk-config
+    namespace: accounting-services
+
+- apiVersion: v1
+  data:
+    TEST_URL_03: http://debit-account:8443/ext/api
+    TEST_URL_04: http://debit-account.box.com:8443/ext/api
+    TEST_URL_05: http://test-account.box.com/ext/api
+  kind: ConfigMap
+  metadata:
+    name: eadvice-hk
+    namespace: accounting-services
